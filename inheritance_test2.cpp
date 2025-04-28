@@ -2,15 +2,12 @@
 #include <iomanip>
 using namespace std;
 
-// Base Class
 class Number {
 private:
     int rawValue;
 
 public:
-    Number(int rawValue) {
-        this->rawValue = rawValue;
-    }
+    Number(int rawValue) : rawValue(rawValue) {}
 
     int getRawValue() {
         return rawValue;
@@ -21,7 +18,6 @@ public:
     }
 };
 
-// Subclass - WholeNumber
 class WholeNumber : public Number {
 public:
     WholeNumber(int value) : Number(value) {}
@@ -31,19 +27,20 @@ public:
     }
 
     string toString() {
-        return to_string(getRawValue());
+        return "WholeNumber Result (Multiplication): " + to_string(getRawValue());
+    }
+
+    void display() {
+        cout << toString() << endl;
     }
 };
 
-// Subclass - DecimalNumber
 class DecimalNumber : public Number {
 private:
     int decimalPlaces;
 
 public:
-    DecimalNumber(int value, int decimalPlaces) : Number(value) {
-        this->decimalPlaces = decimalPlaces;
-    }
+    DecimalNumber(int value, int decimalPlaces) : Number(value), decimalPlaces(decimalPlaces) {}
 
     int getDecimalPlaces() {
         return decimalPlaces;
@@ -53,24 +50,25 @@ public:
         decimalPlaces = places;
     }
 
-    void multiply(DecimalNumber decimalNumber) {
-        setRawValue(getRawValue() * decimalNumber.getRawValue());
-        setDecimalPlaces(decimalPlaces + decimalNumber.getDecimalPlaces());
+    void multiply(DecimalNumber otherDecimal) {
+        setRawValue(getRawValue() * otherDecimal.getRawValue());
+        setDecimalPlaces(decimalPlaces + otherDecimal.getDecimalPlaces());
     }
 
     string toString() {
-        double value = getRawValue();
+        double result = getRawValue();
         for (int i = 0; i < decimalPlaces; i++) {
-            value /= 10.0;
+            result /= 10.0;
         }
-
-        // Using C++ iomanip for formatting
         cout << fixed << setprecision(decimalPlaces);
-        return to_string(value);
+        return "DecimalNumber Result (Multiplication): " + to_string(result);
+    }
+
+    void display() {
+        cout << toString() << endl;
     }
 };
 
-// Main Function
 int main() {
     // Whole Number Multiplication
     int firstWhole, secondWhole;
@@ -83,7 +81,9 @@ int main() {
     WholeNumber w2(secondWhole);
 
     w1.multiply(w2);
-    cout << "WholeNumber Result (Multiplication): " << w1.toString() << endl << endl;
+    w1.display();
+
+    cout << endl;
 
     // Decimal Number Multiplication
     int firstDecimalRaw, firstDecimalPlaces;
@@ -103,16 +103,7 @@ int main() {
     DecimalNumber d2(secondDecimalRaw, secondDecimalPlaces);
 
     d1.multiply(d2);
-
-    // Output decimal result
-    double result = d1.getRawValue();
-    int totalDecimalPlaces = d1.getDecimalPlaces();
-    for (int i = 0; i < totalDecimalPlaces; i++) {
-        result /= 10.0;
-    }
-
-    cout << fixed << setprecision(totalDecimalPlaces);
-    cout << "DecimalNumber Result (Multiplication): " << result << endl;
+    d1.display();
 
     return 0;
 }
